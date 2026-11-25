@@ -2521,10 +2521,6 @@
     ],
     "employees": [
       {
-        "name": "Ahmed Faraz",
-        "jobTitle": "Sales Manager",
-        "department": "Sales",
-        "city": "Lahore",
         "id": "employee-1",
         "name": "Ahmad Raza",
         "email": "admin@smartcrm.com",
@@ -2548,20 +2544,9 @@
         "city": "Karachi",
         "createdAt": "2026-01-14"
       },
-
-        "name": "Ayesha Siddiqui",
-        "jobTitle": "Sales Executive",
-        "department": "Sales",
-        "city": "Karachi",
-        "id": "employee-2",
-        "email": "staff@smartcrm.example",
-        "role": "Staff",
-        "status": "Active",
-        "phone": "+92 333 1799819",
-        "createdAt": "2026-01-22"
-      },
       {
         "name": "Hassan Sheikh",
+
         "jobTitle": "Business Development Officer",
         "department": "Business Development",
         "city": "Islamabad",
