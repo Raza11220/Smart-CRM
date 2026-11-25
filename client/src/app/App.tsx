@@ -20,28 +20,33 @@ const AuthPage = lazy(() => import('../features/auth/auth-page'))
 function ProtectedRoute() {
   const userId = useAuth(s => s.userId)
   const authStatus = useAuth(s => s.status)
-  const authError = useAuth(s => s.error)
   const ready = useCRM(s => s.ready)
   const workspaceError = useCRM(s => s.error)
   const user = useCurrentUser()
   const location = useLocation()
-  if (API_MODE && (authError || (userId && workspaceError))) {
+
+  if (API_MODE && authStatus === 'loading') return <PageSkeleton />
+  if (!userId || !user || user.status !== 'Active') {
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />
+  }
+
+  if (API_MODE && workspaceError) {
     return (
       <div className="error-page">
         <h1>Workspace unavailable</h1>
-        <p>{authError || workspaceError}</p>
+        <p>{workspaceError}</p>
         <div style={{ display: 'flex', gap: '10px', marginTop: '14px', justifyContent: 'center' }}>
-          <Button onClick={async () => { if (authError) await useAuth.getState().restore(); if (useAuth.getState().userId) await useCRM.getState().refresh().catch(() => {}) }}>Retry connection</Button>
+          <Button onClick={async () => { await useCRM.getState().refresh().catch(() => {}) }}>Retry connection</Button>
           <a className="btn btn-secondary" href="/login">Go to Login</a>
         </div>
       </div>
     )
   }
 
-  if (API_MODE && (authStatus === 'loading' || (userId && !ready))) return <PageSkeleton />
-  if (!userId || !user || user.status !== 'Active') return <Navigate to="/login" state={{ from: location.pathname }} replace />
+  if (API_MODE && !ready) return <PageSkeleton />
   return <AppShell />
 }
+
 export function PageSkeleton() { return <div className="page-skeleton" aria-label="Loading page" role="status"><div className="skeleton skeleton-title" /><div className="skeleton skeleton-subtitle" /><div className="skeleton-stats">{[1, 2, 3, 4].map(i => <div key={i} className="skeleton" />)}</div><div className="skeleton skeleton-chart" /><span className="sr-only">Loading your workspace…</span></div> }
 function ErrorPage({ denied = false }: { denied?: boolean }) { return <div className="error-page"><span className="error-code">{denied ? '403' : '404'}</span><h1>{denied ? 'This area is for admins' : 'Page not found'}</h1><p>{denied ? 'Your role does not have permission to perform this action.' : 'The page you’re looking for has moved or doesn’t exist.'}</p><a className="btn btn-primary" href="/dashboard">Back to dashboard</a></div> }
 class ErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
