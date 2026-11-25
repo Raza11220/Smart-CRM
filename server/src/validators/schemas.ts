@@ -6,7 +6,8 @@ export const day = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Use YYYY-MM-DD').ref
 const text = (max = 300) => z.string().trim().max(max);
 const required = (max = 300) => text(max).min(1);
 const email = z.email().trim().toLowerCase().max(254);
-export const password = z.string().min(12).max(72).refine(value => Buffer.byteLength(value, 'utf8') <= 72, 'Password must not exceed 72 UTF-8 bytes').refine(value => /[A-Z]/.test(value) && /[a-z]/.test(value) && /\d/.test(value) && /[^a-z\d]/i.test(value), 'Use uppercase, lowercase, a number, and a symbol');
+export const password = z.string().min(6).max(72);
+
 export const personFields = { firstName: required(80), lastName: required(120), email, phone: text(40).optional(), jobTitle: text().optional(), department: text().optional(), city: text().optional() };
 export const registerSchema = z.object({ firstName: personFields.firstName, lastName: personFields.lastName, email, password }).strict();
 export const loginSchema = z.object({ email, password: z.string().min(1).max(72), remember: z.boolean().optional() }).strict();
