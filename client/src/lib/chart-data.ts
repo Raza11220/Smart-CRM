@@ -3,7 +3,7 @@ import { periodStart } from './format'
 import { dateKey } from './localization'
 import type { Database } from '../types'
 
-export const chartColors = ['#4174d1', '#7688a5', '#548e8d', '#aa9270', '#9280ae', '#5e79a1']
+export const chartColors = ['#4f46e5', '#06b6d4', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#3b82f6']
 export function revenueData(data: Database, period: string) {
   const fromKey = periodStart(period); const from = parseISO(fromKey); const today = dateKey(); const now = parseISO(today)
   const daily = ['Last 7 days', 'Last 30 days'].includes(period)
