@@ -25,7 +25,19 @@ function ProtectedRoute() {
   const workspaceError = useCRM(s => s.error)
   const user = useCurrentUser()
   const location = useLocation()
-  if (API_MODE && (authError || (userId && workspaceError))) return <div className="error-page"><h1>Workspace unavailable</h1><p>{authError || workspaceError}</p><Button onClick={async () => { if (authError) await useAuth.getState().restore(); if (useAuth.getState().userId) await useCRM.getState().refresh().catch(() => {}) }}>Retry connection</Button></div>
+  if (API_MODE && (authError || (userId && workspaceError))) {
+    return (
+      <div className="error-page">
+        <h1>Workspace unavailable</h1>
+        <p>{authError || workspaceError}</p>
+        <div style={{ display: 'flex', gap: '10px', marginTop: '14px', justifyContent: 'center' }}>
+          <Button onClick={async () => { if (authError) await useAuth.getState().restore(); if (useAuth.getState().userId) await useCRM.getState().refresh().catch(() => {}) }}>Retry connection</Button>
+          <a className="btn btn-secondary" href="/login">Go to Login</a>
+        </div>
+      </div>
+    )
+  }
+
   if (API_MODE && (authStatus === 'loading' || (userId && !ready))) return <PageSkeleton />
   if (!userId || !user || user.status !== 'Active') return <Navigate to="/login" state={{ from: location.pathname }} replace />
   return <AppShell />
