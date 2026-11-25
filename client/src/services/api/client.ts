@@ -1,5 +1,11 @@
 import axios, { type InternalAxiosRequestConfig } from 'axios'
-export const api = axios.create({ baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api', timeout: 15000, withCredentials: true, headers: { 'Content-Type': 'application/json', 'X-SmartCRM-Request': '1' } })
+export const api = axios.create({ 
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://server-ik0ed07zn-ahmads-projects-58dcfa5b.vercel.app/api', 
+  timeout: 15000, 
+  withCredentials: true, 
+  headers: { 'Content-Type': 'application/json', 'X-SmartCRM-Request': '1' } 
+})
+
 const sessionApi = axios.create({ baseURL: api.defaults.baseURL, timeout: 15000, withCredentials: true, headers: { 'Content-Type': 'application/json', 'X-SmartCRM-Request': '1' } })
 let accessToken: string | null = null
 let refreshPromise: Promise<SessionResponse> | null = null
