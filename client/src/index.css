@@ -1,0 +1,18 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+@import "./styles/app.css";
+@import "./styles/components.css";
+@import "./styles/features.css";
+@import "./styles/responsive.css";
+@custom-variant dark (&:is(.dark *));
+@theme inline {
+  --font-sans: 'Geist Variable', sans-serif;
+  --font-heading: var(--font-sans);
+  --color-background: var(--background);
+  --color-foreground: var(--text);
+  --color-primary: #2563eb;
+  --color-border: var(--border);
+  --radius-lg: 0.625rem;
+}

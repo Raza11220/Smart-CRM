@@ -1,0 +1,12 @@
+import { actor } from '../middleware/auth.middleware';
+import { User } from '../models/User.model';
+import * as service from '../services/user.service';
+import { ApiError, asyncHandler, success } from '../utils/http';
+import { dto } from '../utils/dto';
+import { idParams, listSchema } from '../validators/schemas';
+export const list = asyncHandler(async (req, res) => res.json({ success: true, ...await service.listUsers(listSchema.parse(req.query)) }));
+export const get = asyncHandler(async (req, res) => { const user = await User.findById(idParams.parse(req.params).id).select('-notificationPreferences'); if (!user) throw new ApiError(404, 'Employee not found'); return success(res, dto(user)); });
+export const create = asyncHandler(async (req, res) => success(res, dto(await service.createUser(req.body, actor(req))), 'Employee created', 201));
+export const update = asyncHandler(async (req, res) => success(res, dto(await service.updateUser(actor(req), idParams.parse(req.params).id, req.body)), 'Employee updated'));
+export const remove = asyncHandler(async (req, res) => { await service.deleteUser(actor(req), idParams.parse(req.params).id); return success(res, null, 'Employee deleted'); });
+export const performance = asyncHandler(async (req, res) => success(res, await service.userPerformance(actor(req), idParams.parse(req.params).id)));

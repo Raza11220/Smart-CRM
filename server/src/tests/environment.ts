@@ -1,0 +1,11 @@
+import 'dotenv/config';
+import { randomBytes } from 'node:crypto';
+process.env.NODE_ENV = 'test';
+process.env.JWT_ACCESS_SECRET = randomBytes(48).toString('hex');
+process.env.JWT_REFRESH_SECRET = randomBytes(48).toString('hex');
+process.env.ALLOW_PUBLIC_REGISTRATION = 'true';
+process.env.CLIENT_URL = 'http://localhost:5173';
+const source = process.env.TEST_MONGODB_URI || 'mongodb://127.0.0.1:27018/smartcrm_test_api?replicaSet=smartcrm-dev';
+const match = /^(mongodb(?:\+srv)?:\/\/[^/]+)\/([^?]+)(\?.*)?$/.exec(source);
+if (!match || !match[2]?.startsWith('smartcrm_test_')) throw new Error('Tests require a dedicated TEST_MONGODB_URI database beginning with smartcrm_test_.');
+process.env.MONGODB_URI = `${match[1]}/${match[2]}_${process.pid}${match[3] || ''}`;

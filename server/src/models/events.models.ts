@@ -1,0 +1,12 @@
+import { model, Schema } from 'mongoose';
+const objectId = Schema.Types.ObjectId;
+const activitySchema = new Schema({ actorId: { type: objectId, ref: 'User', required: true }, entityType: { type: String, enum: ['customer', 'lead', 'deal', 'task', 'user'], required: true }, entityId: { type: objectId, required: true }, action: { type: String, required: true }, description: { type: String, required: true }, metadata: { type: Map, of: Schema.Types.Mixed }, audienceIds: [{ type: objectId, ref: 'User' }], demoSeed: { type: Boolean, default: false, select: false } }, { timestamps: { createdAt: true, updatedAt: false }, strict: 'throw' });
+activitySchema.index({ createdAt: -1 }); activitySchema.index({ audienceIds: 1, createdAt: -1 });
+export const Activity = model('Activity', activitySchema);
+const notificationSchema = new Schema({ userId: { type: objectId, ref: 'User', required: true }, actorId: { type: objectId, ref: 'User' }, title: { type: String, required: true }, message: { type: String, required: true }, type: { type: String, required: true }, relatedEntityType: String, relatedEntityId: objectId, isRead: { type: Boolean, default: false }, demoSeed: { type: Boolean, default: false, select: false } }, { timestamps: { createdAt: true, updatedAt: false }, strict: 'throw' });
+notificationSchema.index({ userId: 1, isRead: 1, createdAt: -1 });
+export const Notification = model('Notification', notificationSchema);
+const sessionSchema = new Schema({ userId: { type: objectId, ref: 'User', required: true }, familyId: { type: String, required: true }, tokenHash: { type: String, required: true, unique: true, select: false }, expiresAt: { type: Date, required: true }, revokedAt: { type: Date, default: null }, remember: { type: Boolean, default: true } }, { timestamps: true, strict: 'throw' });
+sessionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 }); sessionSchema.index({ familyId: 1 });
+export const RefreshSession = model('RefreshSession', sessionSchema);
+export const WorkspaceLock = model('WorkspaceLock', new Schema({ _id: String, version: { type: Number, default: 0 } }, { strict: 'throw' }));
